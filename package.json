@@ -1,0 +1,47 @@
+{
+  "name": "@ach/ach",
+  "version": "1.1.0",
+  "description": "NACHA ACH EFT File Parser/Editor/Formatter for CCD+ / PPD+ / CTX+",
+  "keywords": [
+    "eft",
+    "ach",
+    "nacha",
+    "ccd",
+    "ccd+",
+    "ppd",
+    "ppd+",
+    "parse",
+    "parser",
+    "format",
+    "formatter",
+    "reader",
+    "writer",
+    "json"
+  ],
+  "main": "lib",
+  "bin": "bin/ach.js",
+  "author": "Eli Doran <eli+npm@elidoran.com>",
+  "license": "MIT",
+  "scripts": {
+    "compile": "coffee --bare --compile lib bin",
+    "clean": "rm -f ./bin/command.js ; find ./lib -name \"*.js\" -type f -delete",
+    "prepublish": "npm run compile",
+    "postpublish": "npm run clean",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/elidoran/node-ach.git"
+  },
+  "bugs": "http://github.com/elidoran/node-ach/issues",
+  "devDependencies": {
+    "coffee-script": "^1.11.1",
+    "jest": "^29.7.0",
+    "mocha": "^3.1.2"
+  },
+  "dependencies": {
+    "each-part": "^0.9.0",
+    "requireg": "^0.1.6",
+    "strung": "^1.0.5"
+  }
+}
