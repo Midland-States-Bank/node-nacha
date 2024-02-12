@@ -1,7 +1,6 @@
 const fs = require('fs')
 const ach = require('../index')();
 
-console.log(__dirname);
 const achFile = fs.readFileSync(`${__dirname}/assets/NACHA.txt`).toString()
 
 const achFrom = ach.from({
