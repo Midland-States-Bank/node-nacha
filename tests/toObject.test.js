@@ -15,8 +15,6 @@ describe('toObject Function Test Cases', () => {
     it('Should return an object', async () => {
 
         const achObj = await achFrom.toObject()
-        console.log(achObj);
-
         expect(typeof achObj).toEqual('object')
 
     })
