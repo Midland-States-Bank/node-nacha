@@ -1,0 +1,79 @@
+{
+    "file": {
+      "recordType": "1",
+      "priority": 1,
+      "destination": " 081000032",
+      "origin": " 123456789",
+      "creationDate": "240206",
+      "creationTime": "0923",
+      "idModifier": "A",
+      "recordSize": "094",
+      "blockingFactor": "10",
+      "formatCode": "1",
+      "destinationName": "Some Bank",
+      "originName": "Your Company Inc",
+      "referenceCode": "#A000001",
+      "footer": {
+        "recordType": "9",
+        "batchCount": 1,
+        "blockCount": 1,
+        "entryAndAddendaCount": 1,
+        "entryHash": 8100021,
+        "totalDebit": 0,
+        "totalCredit": 17500,
+        "reserved": ""
+      }
+    },
+    "batches": [
+      {
+        "entries": [
+          {
+            "recordType": "6",
+            "transactionCode": "22",
+            "receivingDFIIdentification": 8100021,
+            "checkDigit": 0,
+            "dfiAccount": "5654221",
+            "amount": 17500,
+            "identificationNumber": "RAj##32b1kn1bb3",
+            "receivingCompanyName": "Luke Skywalker",
+            "paymentTypeCode": "A1",
+            "addendaIndicator": "1",
+            "traceNumber": 123456780000000,
+            "addenda": {
+              "recordType": "7",
+              "type": "05",
+              "info": "0123456789ABCDEFGJIJKLMNOPQRSTUVWXYXabcdefgjijklmnopqrstuvwxyx",
+              "num": 100,
+              "entryNum": 0
+            }
+          }
+        ],
+        "recordType": "5",
+        "serviceClassCode": 220,
+        "companyName": "Your Company Inc",
+        "discretionaryData": "",
+        "companyId": "0123456789",
+        "entryClassCode": "WEB",
+        "description": "Trans Desc",
+        "date": "Feb 16",
+        "effectiveDate": "240216",
+        "settlementDate": "",
+        "originatorStatusCode": "1",
+        "originatingDFIIdentification": "08100003",
+        "num": 0,
+        "footer": {
+          "recordType": "8",
+          "serviceClassCode": 220,
+          "entryAndAddendaCount": 2,
+          "entryHash": 8100021,
+          "totalDebit": 0,
+          "totalCredit": 17500,
+          "companyId": "0123456789",
+          "messageAuthenticationCode": "",
+          "reserved": "",
+          "originatingDFIIdentification": "08100003",
+          "num": 0
+        }
+      }
+    ]
+}
