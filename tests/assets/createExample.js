@@ -1,4 +1,5 @@
 const ach = require('../../index');
+const achFormatter = require('./../../lib/transforms/ach-formatter')
 
 const achFile = ach.create({
   from: {
