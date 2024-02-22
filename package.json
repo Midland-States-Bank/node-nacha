@@ -1,6 +1,6 @@
 {
   "name": "msb-node-nacha",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "NACHA ACH EFT File Parser/Formatter for CCD+ / PPD+ / CTX+",
   "keywords": [
     "eft",
