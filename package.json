@@ -1,6 +1,6 @@
 {
   "name": "@midlandsbank/node-nacha",
-  "version": "1.0.3",
+  "version": "0.0.0",
   "description": "NACHA ACH EFT File Parser/Formatter for CCD+ / PPD+ / CTX+",
   "keywords": [
     "eft",
