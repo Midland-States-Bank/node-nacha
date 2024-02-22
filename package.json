@@ -1,6 +1,6 @@
 {
   "name": "@msb/node-nacha",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "description": "NACHA ACH EFT File Parser/Formatter for CCD+ / PPD+ / CTX+",
   "keywords": [
     "eft",
@@ -18,13 +18,10 @@
     "writer",
     "json"
   ],
+  "license": "MIT",
   "main": "lib",
   "bin": "bin/ach.js",
   "scripts": {
-    "compile": "coffee --bare --compile lib bin",
-    "clean": "rm -f ./bin/command.js ; find ./lib -name \"*.js\" -type f -delete",
-    "prepublish": "npm run compile",
-    "postpublish": "npm run clean",
     "test": "jest"
   },
   "devDependencies": {
