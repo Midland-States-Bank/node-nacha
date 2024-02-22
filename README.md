@@ -1,4 +1,4 @@
-# msb-node-nacha
+# @midlandsbank/node-nacha
 # NACHA File Formatter/Parser
 
 Parses and formats NACHA ACH standard CCD+/PPD+ bank transaction files.
@@ -12,7 +12,7 @@ Parses and formats NACHA ACH standard CCD+/PPD+ bank transaction files.
 
 ### Installation
 
-    npm install msb-node-nacha
+    npm install @midlandsbank/node-nacha
 
 ## Using the Package
 
