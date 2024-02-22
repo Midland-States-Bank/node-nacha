@@ -14,9 +14,7 @@ Parses and formats NACHA ACH standard CCD+/PPD+ bank transaction files.
 
 ### Installation
 
-    npm install PLACEHOLDER TODO: Publish Package
-
-
+    npm install msb-node-nacha
 
 ## Using the Package
 
