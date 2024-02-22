@@ -1,5 +1,5 @@
 {
-  "name": "@msb/node-nacha",
+  "name": "msb-node-nacha",
   "version": "1.0.0",
   "description": "NACHA ACH EFT File Parser/Formatter for CCD+ / PPD+ / CTX+",
   "keywords": [
