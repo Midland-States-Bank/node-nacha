@@ -1,4 +1,4 @@
-# msn-node-nacha
+# msb-node-nacha
 # NACHA File Formatter/Parser
 <!-- [![Build Status](https://travis-ci.org/elidoran/node-ach.svg?branch=master)](https://travis-ci.org/elidoran/node-ach) -->
 <!-- [![Dependency Status](https://gemnasium.com/badges/github.com/elidoran/node-ach.svg)](https://gemnasium.com/github.com/elidoran/node-ach) -->
