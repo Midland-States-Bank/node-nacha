@@ -28,6 +28,14 @@ describe('create function test cases', () => {
 
         let { data } = nachaFile
 
+        let { creationDate } = data.file
+        let year = '20' + creationDate.slice(0, 2)
+        let month = creationDate.slice(2, 4)
+        let day = creationDate.slice(4, 6)
+
+        let mockDate = new Date(`${year}-${month}-${day}`)
+        jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
+
         let newNacha = nacha.create({
             from: {
                 name: data.file.originName,
@@ -67,7 +75,8 @@ describe('create function test cases', () => {
                     },
                     routing: entry.receivingDFIIdentification,
                     amount: entry.amount,
-                    identificationNumber: entry.identificationNumber
+                    identificationNumber: entry.identificationNumber,
+                    paymentTypeCode: entry.paymentTypeCode
                 })
             }
 
@@ -76,6 +85,8 @@ describe('create function test cases', () => {
             expect(newCreatedNachaString).toEqual(nachaStringExample)
 
         }
+        
+        global.Date.mockRestore();
     })
 
     it('should be able to create a JSON String', () => {
