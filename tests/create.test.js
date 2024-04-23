@@ -36,14 +36,18 @@ describe('create function test cases', () => {
             for: {
                 name: data.file.destinationName,
                 routing: data.file.destination
-            }
+            },
+            referenceCode: data.file.referenceCode,
         })
 
         let { batches } = data
 
         for(let batch of batches){
 
-            newNacha = newNacha.ccd({
+            let transactionsType = batch.entryClassCode.toLowerCase()
+
+            console.log(transactionsType);
+            newNacha = newNacha[transactionsType]({
                 effectiveDate: batch.effectiveDate,
                 description: batch.description,
                 note: batch.discretionaryData,
@@ -55,7 +59,6 @@ describe('create function test cases', () => {
             for(let entry of entries){
                 let entryType = entry.transactionCode.endsWith('3') ? 'credit' : 'debit'
 
-                console.log(typeof entry.receivingDFIIdentification);
                 newNacha = newNacha[entryType]({
                     name: entry.receivingCompanyName,
                     account: {
@@ -64,6 +67,7 @@ describe('create function test cases', () => {
                     },
                     routing: entry.receivingDFIIdentification,
                     amount: entry.amount,
+                    identificationNumber: entry.identificationNumber
                 })
             }
 
