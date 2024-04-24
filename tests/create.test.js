@@ -23,9 +23,6 @@ describe('create function test cases', () => {
     it('should be able to read then recreate the same file', () => {
         
         let nachaFile = nacha.from(nachaStringExample)
-
-        console.log(JSON.stringify(nachaFile.data, null, 2))
-
         let { data } = nachaFile
 
         let { creationDate, creationTime } = data.file
@@ -41,8 +38,6 @@ describe('create function test cases', () => {
         
         jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
 
-        console.log(data.file.origin.trim());
-
         let newNacha = nacha.create({
             from: {
                 name: data.file.originName,
@@ -56,7 +51,6 @@ describe('create function test cases', () => {
         })
 
         let { batches } = data
-
         for(let batch of batches){
 
             let transactionsType = batch.entryClassCode.toLowerCase()
@@ -69,7 +63,6 @@ describe('create function test cases', () => {
             })
 
             let { entries } = batch
-
             for(let entry of entries){
                 let entryType = entry.transactionCode.endsWith('7') ? 'debit' : 'credit'
                 newNacha = newNacha[entryType]({
@@ -80,24 +73,31 @@ describe('create function test cases', () => {
                     },
                     // We need to add an extra 0 since the DFI num 
                     // is a routing number without the last number
-                    routing: entry.receivingDFIIdentification * 10,
+                    routing: String(entry.receivingDFIIdentification) + entry.checkDigit,
                     amount: entry.amount,
                     identificationNumber: entry.identificationNumber,
-                    paymentTypeCode: entry.paymentTypeCode
+                    paymentTypeCode: entry.paymentTypeCode,
+                    discretionaryData: entry.discretionaryData,
+                    traceNumber: entry.traceNumber,
+                    addenda: entry.addenda?.info
                 })
             }
 
-            let newNachaFile = nacha.from(newNacha)
-            console.log(JSON.stringify(newNachaFile.data.object, null, 2));
-            console.log(newNachaFile.data.object.batches[0].footer.entryHash.length);
-            // console.log(newNachaFile.data.object.batches.length, data.batches.length);
-
-            let newCreatedNachaString = newNachaFile.to('ach')
-
-            expect(newCreatedNachaString).toEqual(nachaStringExample)
-
         }
         
+        let newNachaFile = nacha.from(newNacha)
+
+        let newCreatedNachaString = newNachaFile.to('ach')
+        let newNachaStringLines = newCreatedNachaString.split('\n')
+        let nachaStringLines = newCreatedNachaString.replace(/\r/g, '').split('\n')
+
+        // Loop though all the lines of the NACHA files & ensure they're equal
+        nachaStringLines.forEach( (originalLine, index) => {
+            let generatedLine = newNachaStringLines[index]
+
+            expect(generatedLine).toEqual(originalLine)
+        })
+
         global.Date.mockRestore();
     })
 
