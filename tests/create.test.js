@@ -72,7 +72,6 @@ describe('create function test cases', () => {
 
             for(let entry of entries){
                 let entryType = entry.transactionCode.endsWith('7') ? 'debit' : 'credit'
-                console.log(entry.receivingCompanyName, ': ', entry.transactionCode, entryType);
                 newNacha = newNacha[entryType]({
                     name: entry.receivingCompanyName,
                     account: {
@@ -88,7 +87,12 @@ describe('create function test cases', () => {
                 })
             }
 
-            let newCreatedNachaString = nacha.from(newNacha).to('ach')
+            let newNachaFile = nacha.from(newNacha)
+            console.log(JSON.stringify(newNachaFile.data.object, null, 2));
+            console.log(newNachaFile.data.object.batches[0].footer.entryHash.length);
+            // console.log(newNachaFile.data.object.batches.length, data.batches.length);
+
+            let newCreatedNachaString = newNachaFile.to('ach')
 
             expect(newCreatedNachaString).toEqual(nachaStringExample)
 
