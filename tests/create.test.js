@@ -28,22 +28,29 @@ describe('create function test cases', () => {
 
         let { data } = nachaFile
 
-        let { creationDate } = data.file
-        let year = '20' + creationDate.slice(0, 2)
+        let { creationDate, creationTime } = data.file
+        let realDate = new Date()
+        let year = realDate.getFullYear().toString().slice(0, 2) + creationDate.slice(0, 2)
         let month = creationDate.slice(2, 4)
         let day = creationDate.slice(4, 6)
+        let hour = creationTime.slice(0, 2)
+        let minute = creationTime.slice(2, 4)
 
-        let mockDate = new Date(`${year}-${month}-${day}`)
+        let mockDate = new Date(`${year}-${month}-${day}T${hour}:${minute}:00Z`)
+        mockDate.setHours(mockDate.getHours() + 6)
+        
         jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
+
+        console.log(data.file.origin.trim());
 
         let newNacha = nacha.create({
             from: {
                 name: data.file.originName,
-                fein: data.file.origin
+                fein: data.file.origin.trim()
             },
             for: {
                 name: data.file.destinationName,
-                routing: data.file.destination
+                routing: data.file.destination.trim()
             },
             referenceCode: data.file.referenceCode,
         })
@@ -54,7 +61,6 @@ describe('create function test cases', () => {
 
             let transactionsType = batch.entryClassCode.toLowerCase()
 
-            console.log(transactionsType);
             newNacha = newNacha[transactionsType]({
                 effectiveDate: batch.effectiveDate,
                 description: batch.description,
@@ -65,15 +71,17 @@ describe('create function test cases', () => {
             let { entries } = batch
 
             for(let entry of entries){
-                let entryType = entry.transactionCode.endsWith('3') ? 'credit' : 'debit'
-
+                let entryType = entry.transactionCode.endsWith('7') ? 'debit' : 'credit'
+                console.log(entry.receivingCompanyName, ': ', entry.transactionCode, entryType);
                 newNacha = newNacha[entryType]({
                     name: entry.receivingCompanyName,
                     account: {
                         num: entry.dfiAccount,
                         type: entry.transactionCode.startsWith('2') ? 'C': 'S'
                     },
-                    routing: entry.receivingDFIIdentification,
+                    // We need to add an extra 0 since the DFI num 
+                    // is a routing number without the last number
+                    routing: entry.receivingDFIIdentification * 10,
                     amount: entry.amount,
                     identificationNumber: entry.identificationNumber,
                     paymentTypeCode: entry.paymentTypeCode
