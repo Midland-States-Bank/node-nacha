@@ -32,7 +32,6 @@ describe('from test cases', () => {
             source: achString
         })
 
-        // console.log(JSON.stringify(achFileFromString, null, 2))
         expect(achFileFromString.data !== undefined).toBe(true)
 
         let achFileFromJSON = ach.from({
