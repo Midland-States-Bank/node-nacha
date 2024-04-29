@@ -20,7 +20,7 @@ Couldn't fork his module due to it being built in coffeescript.
 
 `nacha` has three main functions to start with
 
-1. create() - used to generate an ACH file object
+1. create() - used to generate an object that can be loaded into `from()` function
 2. from() - used to create a new file from a different format like a NACHA file or JSON
 
 [Back to: Table of Contents](#table-of-contents)
@@ -32,53 +32,53 @@ Couldn't fork his module due to it being built in coffeescript.
 const nacha = require('@midlandsbank/node-nacha')
 
 // Create a new file Instance
-const nachaFile = nacha.create({
-  from: {
-    name: 'Your Company',
-    fein: '123456789'
+const nachaObj = nacha.create({
+  "from": {
+    "name": "Your Company",
+    "fein": "123456789"
   },
-  for: {
-    name: 'Our Bank',
-    routing: '123456789'
+  "for": {
+    "name": "Our Bank",
+    "routing": "123456789"
   },
-  ccd: {
-    effectiveDate: '991231',
-    description: 'Payment',
-    note: 'the "discretionary data"',
-    date: 'Mar 30'
+})
+.ccd({
+  "effectiveDate": "991231",
+  "description": "Payment",
+  "note": "the \"discretionary data\"",
+  "date": "Mar 30"
+})
+.credit({
+  "name": "Target Company",
+  "account": {
+    "num": "135792468",
+    "type": "C"
   },
-  credit: [
-    {
-      name: 'Target Company',
-      account: {
-        num: '135792468',
-        type: 'C'
-      },
-      routing: '987654321',
-      amount: 12345,
-      addenda: 'some addenda 80 chars long'
-    },
-    {
-      name: 'Another Company',
-      account: {
-        num: '159260',
-        type: 'C'
-      },
-      routing: '987654321',
-      amount: 13579
-    }
-  ],
-  debit: {
-    name: 'Your Company',
-    account: {
-      num: '135792468',
-      type: 'C'
-    },
-    routing: '987654321',
-    amount: 25924,
-    addenda: 'some addenda 80 chars long'
-  }
-});
+  "routing": "987654321",
+  "amount": 12345,
+  "addenda": "some addenda 80 chars long"
+})
+.credit({
+  "name": "Another Company",
+  "account": {
+    "num": "159260",
+    "type": "C"
+  },
+  "routing": "987654321",
+  "amount": 13579
+})
+.debit({
+  "name": "Your Company",
+  "account": {
+    "num": "135792468",
+    "type": "C"
+  },
+  "routing": "987654321",
+  "amount": 25924,
+  "addenda": "some addenda 80 chars long"
+})
+
+let nachaFile = nacha.from(nachaObj)
 
 // To access the nacha object use the data property
 console.log(nachaFile.data)
