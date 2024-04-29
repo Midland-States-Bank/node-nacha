@@ -12,26 +12,27 @@ describe('from test cases', () => {
     it('ensure it can create from multiple formats', () => {
 
         let achFileFromString = ach.from(achString)
-        expect(achFileFromString.data !== 'undefined').toBe(true)
+        expect(achFileFromString.data !== undefined).toBe(true)
 
         let achFileFromJSON = ach.from(achJSONString)
-        expect(achFileFromJSON.data !== 'undefined').toBe(true)
+        expect(achFileFromJSON.data !== undefined).toBe(true)
 
         let achFileFromObject = ach.from(achObject)
-        expect(achFileFromObject.data !== 'undefined').toBe(true)
+        expect(achFileFromObject.data !== undefined).toBe(true)
 
         let achFileFromCreateData = ach.from(achFromCreateFunc)
-        expect(achFileFromCreateData.data !== 'undefined').toBe(true)
+        expect(achFileFromCreateData.data !== undefined).toBe(true)
 
     })
 
     it('ensure you can specify format also', () => {
 
         let achFileFromString = ach.from({
-            format: 'string',
+            format: 'ach',
             source: achString
         })
-        expect(achFileFromString.data !== 'undefined').toBe(true)
+
+        expect(achFileFromString.data !== undefined).toBe(true)
 
         let achFileFromJSON = ach.from({
             format: 'json',
