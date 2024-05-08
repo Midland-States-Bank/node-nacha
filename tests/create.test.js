@@ -77,7 +77,7 @@ describe('create function test cases', () => {
                     amount: entry.amount,
                     identificationNumber: entry.identificationNumber,
                     paymentTypeCode: entry.paymentTypeCode,
-                    discretionaryData: entry.discretionaryData,
+                    note: entry.discretionaryData,
                     traceNumber: entry.traceNumber,
                     addenda: entry.addenda?.info
                 })
