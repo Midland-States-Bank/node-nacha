@@ -92,7 +92,7 @@ describe('create function test cases', () => {
         let newCreatedNachaString = newNachaFile.to('ach')
         let newNachaStringLines = newCreatedNachaString.split('\n')
         let nachaStringLines = nachaStringExample.replace(/\r/g, '').split('\n')
-        console.log(newNachaFile.data.batches);
+        
         expect(nachaStringLines.length).toEqual(newNachaStringLines.length)
 
         // Loop though all the lines of the NACHA files & ensure they're equal
