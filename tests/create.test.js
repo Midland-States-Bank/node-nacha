@@ -1,9 +1,11 @@
+'use strict';
+
 const nacha = require('../index');
 const fs = require('fs')
 
 const nachaStringExample = fs.readFileSync(`${__dirname}/assets/NACHA.txt`).toString().replace(/\r/g, '')
 const createdFile = require('./assets/createExample')
-const createdNachaString = createdFile.to('ach')
+
 
 describe('create function test cases', () => {
 
@@ -26,16 +28,13 @@ describe('create function test cases', () => {
         let { data } = nachaFile
 
         let { creationDate, creationTime } = data.file
-        let realDate = new Date()
-        let year = realDate.getFullYear().toString().slice(0, 2) + creationDate.slice(0, 2)
-        let month = creationDate.slice(2, 4)
-        let day = creationDate.slice(4, 6)
-        let hour = creationTime.slice(0, 2)
-        let minute = creationTime.slice(2, 4)
+        let year = new Date().getFullYear().toString().slice(0, 2) + Number(creationDate.slice(0, 2))
+        let month = Number(creationDate.slice(2, 4)) - 1 // months are 0 indexed
+        let day = Number(creationDate.slice(4, 6))
+        let hour = Number(creationTime.slice(0, 2))
+        let minute = Number(creationTime.slice(2, 4))
+        let mockDate = new Date(year, month, day, hour, minute)
 
-        let mockDate = new Date(`${year}-${month}-${day}T${hour}:${minute}:00Z`)
-        mockDate.setHours(mockDate.getHours() + 6)
-        
         jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
 
         let newNacha = nacha.create({
@@ -48,6 +47,7 @@ describe('create function test cases', () => {
                 routing: data.file.destination.trim()
             },
             referenceCode: data.file.referenceCode,
+            idModifier: data.file.idModifier
         })
 
         let { batches } = data
@@ -59,7 +59,10 @@ describe('create function test cases', () => {
                 effectiveDate: batch.effectiveDate,
                 description: batch.description,
                 note: batch.discretionaryData,
-                date: batch.date
+                date: batch.date,
+                companyId: batch.companyId,
+                companyName: batch.companyName,
+                originatingDFIIdentification: batch.originatingDFIIdentification
             })
 
             let { entries } = batch
@@ -71,8 +74,6 @@ describe('create function test cases', () => {
                         num: entry.dfiAccount,
                         type: entry.transactionCode.startsWith('2') ? 'C': 'S'
                     },
-                    // We need to add an extra 0 since the DFI num 
-                    // is a routing number without the last number
                     routing: String(entry.receivingDFIIdentification) + entry.checkDigit,
                     amount: entry.amount,
                     identificationNumber: entry.identificationNumber,
@@ -84,12 +85,14 @@ describe('create function test cases', () => {
             }
 
         }
-        
+
         let newNachaFile = nacha.from(newNacha)
 
         let newCreatedNachaString = newNachaFile.to('ach')
         let newNachaStringLines = newCreatedNachaString.split('\n')
-        let nachaStringLines = newCreatedNachaString.replace(/\r/g, '').split('\n')
+        let nachaStringLines = nachaStringExample.replace(/\r/g, '').split('\n')
+
+        expect(nachaStringLines.length).toEqual(newNachaStringLines.length)
 
         // Loop though all the lines of the NACHA files & ensure they're equal
         nachaStringLines.forEach( (originalLine, index) => {
