@@ -68,9 +68,6 @@ describe('create function test cases', () => {
 
             let { entries } = batch
             for(let entry of entries){
-                if(getAccountType(entry.transactionCode) === 'G'){
-                    console.log(entry)
-                }
                 
                 let entryType = entry.transactionCode.endsWith('7') ? 'debit' : 'credit'
                 newNacha = newNacha[entryType]({
