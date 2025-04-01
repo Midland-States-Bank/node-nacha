@@ -6,6 +6,7 @@ const fs = require('fs')
 const nachaStringExample = fs.readFileSync(`${__dirname}/assets/NACHA.txt`).toString().replace(/\r/g, '')
 const createdFile = require('./assets/createExample')
 
+const getAccountType = require('../lib/getAccountType')
 
 describe('create function test cases', () => {
 
@@ -67,12 +68,13 @@ describe('create function test cases', () => {
 
             let { entries } = batch
             for(let entry of entries){
+                
                 let entryType = entry.transactionCode.endsWith('7') ? 'debit' : 'credit'
                 newNacha = newNacha[entryType]({
                     name: entry.receivingCompanyName,
                     account: {
                         num: entry.dfiAccount,
-                        type: entry.transactionCode.startsWith('2') ? 'C': 'S'
+                        type: getAccountType(entry.transactionCode)
                     },
                     routing: String(entry.receivingDFIIdentification) + entry.checkDigit,
                     amount: entry.amount,
