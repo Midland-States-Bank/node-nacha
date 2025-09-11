@@ -37,7 +37,9 @@ const achFile = nacha.create({
   },
   "routing": "987654321",
   "amount": 12345,
-  "addenda": "some addenda 80 chars long"
+  "addenda": {
+    "info": "some addenda 80 chars long"
+  }
 })
 .credit({
   "name": "Another Company",
@@ -56,7 +58,10 @@ const achFile = nacha.create({
   },
   "routing": "987654321",
   "amount": 25924,
-  "addenda": "some addenda 80 chars long"
+  "addenda": {
+    "info": "some addenda 80 chars long",
+    "type": "99",
+  }
 })
 .debit({
   "name": "Your Company",

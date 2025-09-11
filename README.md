@@ -1,16 +1,18 @@
 # @midlandsbank/node-nacha
+
 # NACHA File Formatter/Parser
 
 Parses and formats NACHA ACH standard CCD+/PPD+ bank transaction files.
 
-This module was made from Eli Doran's cli tool [@ach/ach](https://www.npmjs.com/package/@ach/ach) \
-Couldn't fork his module due to it being built in coffeescript. 
+This module was made from Eli Doran's cli tool [@ach/ach](https://www.npmjs.com/package/@ach/ach) 
+Couldn't fork his module due to it being built in coffeescript.
+
 # Table of Contents
 
 1. [Installation](#Installation)
 2. [Using the Package](#using-the-package)
-    1. [create()](#create)
-    2. [from()](#from)
+   1. [create()](#create)
+   2. [from()](#from)
 
 ### Installation
 
@@ -25,7 +27,6 @@ Couldn't fork his module due to it being built in coffeescript.
 
 [Back to: Table of Contents](#table-of-contents)
 
-
 ### create()
 
 ```javascript
@@ -35,15 +36,17 @@ const nacha = require('@midlandsbank/node-nacha')
 const nachaObj = nacha.create({
   "from": {
     "name": "Your Company",
-    "fein": "123456789"
+    "fein": "071904779"
   },
   "for": {
     "name": "Our Bank",
-    "routing": "123456789"
+    "routing": "081204540"
   },
+  "referenceCode": '12345678',
+  "idModifier": 'B'
 })
 .ccd({
-  "effectiveDate": "991231",
+  "effectiveDate": getTomorrowYYMMDD(),
   "description": "Payment",
   "note": "the \"discretionary data\"",
   "date": "Mar 30"
@@ -56,7 +59,9 @@ const nachaObj = nacha.create({
   },
   "routing": "987654321",
   "amount": 12345,
-  "addenda": "some addenda 80 chars long"
+  "addenda": {
+    "info": "some addenda 80 chars long"
+  }
 })
 .credit({
   "name": "Another Company",
@@ -75,7 +80,19 @@ const nachaObj = nacha.create({
   },
   "routing": "987654321",
   "amount": 25924,
-  "addenda": "some addenda 80 chars long"
+  "addenda": {
+    "info": "some addenda 80 chars long",
+    "type": "99",
+  }
+})
+.debit({
+  "name": "Your Company",
+  "account": {
+    "num": "135792468",
+    "type": "C"
+  },
+  "routing": "987654321",
+  "prenote": true
 })
 
 let nachaFile = nacha.from(nachaObj)
@@ -96,17 +113,19 @@ Valid arguments:
 
 1. a string representing the file in a raw NACHA file or a JSON representation
 2. an object with format and source (See more below)
-  * format - the name of the input format. currently only 'ach' and 'json' are available
-  * source - the input source may be:
-      * string - string content must be in a format compatible with a known parser
-      * object - an ACH object to send into the pipeline
+
+* format - the name of the input format. currently only 'ach' and 'json' are available
+* source - the input source may be:
+  * string - string content must be in a format compatible with a known parser
+  * object - an ACH object to send into the pipeline
 
 [Back to: Table of Contents](#table-of-contents)
 
 ### from() Examples
 
-**Example NACHA File** \
+**Example NACHA File** 
 NACHA.txt
+
 ```text
 101 081000032 0180362811503042207A094101Some Bank              Your Company Inc       #A000001
 5220Your Company Inc                    0018036281WEBTrnsNicknaMar 5 150305   1081000030000000
@@ -121,7 +140,7 @@ NACHA.txt
 5225Your Company Inc                    0018036281PPDTrnsNicknaMar 6 150306   1081000030000002
 627101000019923698412584     0000015000RAj##765432hj  Jane Doe              A10081000030000005
 822500000100101000010000000150000000000000000018036281                         081000030000002
-9000003000002000000060050600106000000015000000000026820                                       
+9000003000002000000060050600106000000015000000000026820                                     
 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
@@ -151,4 +170,3 @@ let nachaJSON = nachaFile.to('json')
 ```
 
 [Back to: Table of Contents](#table-of-contents)
-
