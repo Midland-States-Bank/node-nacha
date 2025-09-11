@@ -2,17 +2,17 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     // File Layout
-    "rootDir": "./src",
-    "outDir": "./dist",
+    "rootDir": "src",
+    "outDir": "dir",
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "ESNext",
-    "moduleResolution": "NodeNext",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "target": "ES2020",
     "types": [],
-    // For nodejs:
-    "lib": ["ES2020"],
+    // // For nodejs:
+    // "lib": [],
     // "types": ["node"],
     // and npm install -D @types/node
 
@@ -43,6 +43,5 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-  },
-  "include": ["src"]
+  }
 }
