@@ -8,7 +8,7 @@ export interface BatchHeader extends NachaRecordType<5> {
   companyName: string;
   companyDiscretionaryData?: string;
   companyId: string;
-  standardEntryClassCode: SEC;
+  standardEntryClass: SEC;
   companyEntryDescription: string;
   companyEntryDescriptiveDate?: string;
   effectiveDate: string;

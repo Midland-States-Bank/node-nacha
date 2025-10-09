@@ -62,7 +62,7 @@ describe("parseNacha.ts", () => {
       expect([200, 220, 225]).toContain(header.serviceClassCode);
       expect(header.companyName).toBeDefined();
       expect(header.companyId).toBeDefined();
-      expect(SEC_CODES).toContain(header.standardEntryClassCode);
+      expect(SEC_CODES).toContain(header.standardEntryClass);
       expect(header.companyEntryDescription).toBeDefined();
       expect(header.effectiveDate).toBeDefined();
       expect(header.originatingDFIIdentification).toBeDefined();

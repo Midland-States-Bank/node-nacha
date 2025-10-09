@@ -100,6 +100,10 @@ export default class BatchWrapper<S extends SEC> {
     return 200;
   }
 
+  get standardEntryClass(): S {
+    return this.sec
+  }
+
   get batchNumber() {
     return this._parentFile.batches.indexOf(this) + 1;
   }
@@ -135,7 +139,7 @@ export default class BatchWrapper<S extends SEC> {
     return sumArray(credits);
   }
 
-  raw(): Batch<S> {
+  toJSON(): Batch<S> {
     let { id, name, discretionaryData, descriptiveDate } = this.company;
     return {
       header: {
@@ -144,7 +148,7 @@ export default class BatchWrapper<S extends SEC> {
         companyName: name,
         companyDiscretionaryData: discretionaryData,
         companyId: id,
-        standardEntryClassCode: this.sec,
+        standardEntryClass: this.sec,
         companyEntryDescription: this.entryDescription,
         companyEntryDescriptiveDate:
           typeof descriptiveDate === "string"
@@ -156,7 +160,7 @@ export default class BatchWrapper<S extends SEC> {
         originatingDFIIdentification: this.origin,
         batchNumber: this.batchNumber,
       },
-      entries: this.entries.map((entry) => entry.raw()) as EntryType<S>[],
+      entries: this.entries.map((entry) => entry.toJSON()) as EntryType<S>[],
       footer: {
         recordTypeCode: 8,
         serviceClassCode: this.serviceClassCode,

@@ -72,7 +72,7 @@ export default function parseNacha(raw: string): NachaData {
         if (!currentBatchHeader) {
           throw new Error(`Entry found outside of batch at ${lineNum}`);
         }
-        const sec = currentBatchHeader.standardEntryClassCode as SEC;
+        const sec = currentBatchHeader.standardEntryClass as SEC;
         const entry = parseLine(6, line, sec);
         
         currentEntries.push({ entry, addenda: [] });

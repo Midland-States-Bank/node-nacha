@@ -1,3 +1,11 @@
+/** 
+ * @module EntryHelpers 
+ * These functions & Types are abstracts away the Transaction Codes
+ * that NACHA Entries use to determine if a transaction is a credit/debit,
+ * if its a normal transaction (live), pre-notification (prenote), or a 
+ * Zero-Dollar Remittance (remittance), and the type of the account.
+ */
+
 export const AccountTypeMap = {
   Checking: 2,
   Savings: 3,

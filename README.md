@@ -9,10 +9,15 @@ Couldn't fork his module due to it being built in coffeescript.
 
 # Table of Contents
 
-1. [Installation](#Installation)
-2. [Using the Package](#using-the-package)
-   1. [create()](#create)
-   2. [from()](#from)
+- [@midlandsbank/node-nacha](#midlandsbanknode-nacha)
+- [NACHA File Formatter/Parser](#nacha-file-formatterparser)
+- [Table of Contents](#table-of-contents)
+    - [Installation](#installation)
+  - [Using the Package](#using-the-package)
+    - [Nacha](#nacha)
+    - [Nacha.parse()](#nachaparse)
+    - [Nacha.format()](#nachaformat)
+    - [NACHA Data Structure](#nacha-data-structure)
 
 ### Installation
 
@@ -20,108 +25,122 @@ Couldn't fork his module due to it being built in coffeescript.
 
 ## Using the Package
 
-`nacha` has three main functions to start with
-
-1. create() - used to generate an object that can be loaded into `from()` function
-2. from() - used to create a new file from a different format like a NACHA file or JSON
-
-[Back to: Table of Contents](#table-of-contents)
-
-### create()
-
-```javascript
-const nacha = require('@midlandsbank/node-nacha')
+### Nacha
+```typescript
+import Nacha from '@midlandsbank/node-nacha';
 
 // Create a new file Instance
-const nachaObj = nacha.create({
-  "from": {
-    "name": "Your Company",
-    "fein": "071904779"
+let nacha = new Nacha({
+  origin: {
+    name: "Example ODFI",
+    routing: "123456789",
   },
-  "for": {
-    "name": "Our Bank",
-    "routing": "081204540"
+  destination: {
+    name: "Example ODFI",
+    routing: "987654321",
   },
-  "referenceCode": '12345678',
-  "idModifier": 'B'
 })
-.ccd({
-  "effectiveDate": getTomorrowYYMMDD(),
-  "description": "Payment",
-  "note": "the \"discretionary data\"",
-  "date": "Mar 30"
-})
-.credit({
-  "name": "Target Company",
-  "account": {
-    "num": "135792468",
-    "type": "C"
-  },
-  "routing": "987654321",
-  "amount": 12345,
-  "addenda": {
-    "info": "some addenda 80 chars long"
-  }
-})
-.credit({
-  "name": "Another Company",
-  "account": {
-    "num": "159260",
-    "type": "C"
-  },
-  "routing": "987654321",
-  "amount": 13579
-})
-.debit({
-  "name": "Your Company",
-  "account": {
-    "num": "135792468",
-    "type": "C"
-  },
-  "routing": "987654321",
-  "amount": 25924,
-  "addenda": {
-    "info": "some addenda 80 chars long",
-    "type": "99",
-  }
-})
-.debit({
-  "name": "Your Company",
-  "account": {
-    "num": "135792468",
-    "type": "C"
-  },
-  "routing": "987654321",
-  "prenote": true
-})
+  .ccd({
+    company: {
+      name: "Company ABC",
+      id: "123456789",
+    },
+    entryDescription: "Example Entry Desc.",
+  })
+  .addEntry({
+    direction: "credit",
+    amount: 100.0,
+    account: {
+      type: "Checking",
+      number: "1234567890",
+      routing: "123456789",
+    },
+    name: "John Doe",
+  })
+  .done(); // Returns parent Nacha class
 
-let nachaFile = nacha.from(nachaObj)
-
-// To access the nacha object use the data property
-console.log(nachaFile.data)
 
 // convert the file into different formats
-let nachaString = nachaFile.to('ach')
-let nachaJSON = nachaFile.to('json')
+let nachaString = nachaFile.toString() // NACHA file Format
+let nachaJSON = nachaFile.toJSON() // JS Object
 ```
 
+If you want to initialize the class from a NACHA file you can do the following:
+```typescript
+import Nacha from '@midlandsbank/node-nacha';
+import fs from 'fs';
+
+let nachaStr = fs.readdirSync('./NACHA.txt');
+
+// Function will throw if file is invalid
+let nacha = Nacha.fromNacha(nachaStr)
+
+nacha.ccd(/* batch options */)
+
+let nachaStr = nacha.toString();
+```
+- Note: Using `Nacha.fromNacha()` might result in changes to the file since derived fields will be recalculated.
+  if you want to prevent this use the `Nacha.parse()` and `Nacha.format()` functions which will not keeps all fields as is.
+
+Reading the entry data can be tricky since the structure of the data is determined by batch's standard entry class code (SEC). 
+TypeScript can infer the type of the entries by either checking the batches sec/standardEntryClass.
+
+```typescript
+import Nacha from '@midlandsbank/node-nacha';
+import fs from 'fs';
+
+let nachaStr = fs.readdirSync('./NACHA.txt');
+
+// Function will throw if file is invalid
+let nacha = Nacha.fromNacha(nachaStr)
+
+// This will show as a union of all entry types
+let entries = nacha.batches[0].entries
+
+let ccdBatch = nacha.batches.find((batch) => batch.sec === "CCD")
+
+if (ccdBatch) {
+  // Will be correctly typed as CCDEntry[]
+  let ccdEntries = ccdBatch.entries
+}
+```
+
+
 [Back to: Table of Contents](#table-of-contents)
 
-### from()
-
-Valid arguments:
-
-1. a string representing the file in a raw NACHA file or a JSON representation
-2. an object with format and source (See more below)
-
-* format - the name of the input format. currently only 'ach' and 'json' are available
-* source - the input source may be:
-  * string - string content must be in a format compatible with a known parser
-  * object - an ACH object to send into the pipeline
-
+### Nacha.parse()
+Simple function to parse a NACHA string & returns an object representation of the file. 
+If the file has any issues to prevents parsing the function will throw.
 [Back to: Table of Contents](#table-of-contents)
+```typescript
+import Nacha from '@midlandsbank/node-nacha';
+import fs from 'fs';
 
-### from() Examples
+let nachaStr = fs.readdirSync('./NACHA.txt');
+
+try {
+  let nachaData = Nacha.parse(nachaStr);
+} catch (error) {
+  console.log(`Unable to parse NACHA file`)
+}
+```
+
+### Nacha.format()
+format() is a sister function to parse(). It accepts a NACHA Data object like the one returned from
+parse() and formats it into a valid NACHA file. See [here](#nacha-data-structure) for the structure of this data.
+
+```typescript
+import Nacha from '@midlandsbank/node-nacha';
+import fs from 'fs';
+
+let nachaStr = fs.readdirSync('./NACHA.txt');
+
+let nachaData = Nacha.parse(nachaStr);
+
+console.log(nachaData.footer.totalDebits);
+
+let nachaStr = Nacha.format();
+```
 
 **Example NACHA File** 
 NACHA.txt
@@ -149,24 +168,98 @@ NACHA.txt
 9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
 ```
 
-```javascript
-const nacha = require('@midlandsbank/node-nacha');
-const fs = require('fs')
+### NACHA Data Structure
 
-const nachaString = fs.readFileSync(`./NACHA.txt`).toString()
-
-let nachaFile = nacha.from(nachaString)
-
-/* 
-.from() returns: {
-  data: { *File Data* },
-  to: function to convert to other formats
+Here's the structure of the NACHA data that is used widely across the package.
+```JSON
+{
+  "header": {
+    "recordTypeCode": 1,
+    "priorityCode": 1,
+    "destination": "065503681",
+    "origin": "065503681",
+    "fileCreationDate": "120217",
+    "fileCreationTime": "0910",
+    "fileIdModifier": "A",
+    "recordSize": 94,
+    "blockingFactor": 10,
+    "formatCode": 1,
+    "destinationName": "HANCOCK BANK",
+    "originName": "MY COMPANY USA"
+  },
+  "batches": [
+    {
+      "header": {
+        "recordTypeCode": 5,
+        "serviceClassCode": 220,
+        "companyName": "MY COMPANY USA",
+        "companyId": "9123456789",
+        "standardEntryClassCode": "PPD",
+        "companyEntryDescription": "PAYROLL",
+        "companyEntryDescriptiveDate": "120220",
+        "effectiveDate": "120220",
+        "originatorStatusCode": "1",
+        "originatingDFIIdentification": "06550368",
+        "batchNumber": 1
+      },
+      "entries": [
+        {
+          "entry": {
+            "recordTypeCode": 6,
+            "transactionCode": 23,
+            "routingNumber": "065503348",
+            "accountNumber": "1111111",
+            "amount": 0,
+            "idNumber": "000001309",
+            "name": "JOHN M SMITH",
+            "addendaRecordIndicator": 0,
+            "traceNumber": "065503680000001",
+            "type": "PPD"
+          },
+          "addenda": []
+        },
+        {
+          "entry": {
+            "recordTypeCode": 6,
+            "transactionCode": 33,
+            "routingNumber": "265577585",
+            "accountNumber": "11122333",
+            "amount": 0,
+            "idNumber": "000001309",
+            "name": "JOHN M SMITH",
+            "addendaRecordIndicator": 0,
+            "traceNumber": "065503680000002",
+            "type": "PPD"
+          },
+          "addenda": []
+        },
+      ],
+      "footer": {
+        "recordTypeCode": 8,
+        "serviceClassCode": 220,
+        "entryAndAddendaCount": 8,
+        "entryHash": 137163116,
+        "totalDebits": 0,
+        "totalCredits": 0,
+        "companyId": "9123456789",
+        "reserved": "      ",
+        "originatingDFIIdentification": "06550368",
+        "batchNumber": 1
+      }
+    }
+  ],
+  "footer": {
+    "recordTypeCode": 9,
+    "batchCount": 1,
+    "blockCount": 2,
+    "entryAndAddendaCount": 8,
+    "entryHash": 137163116,
+    "totalDebits": 0,
+    "totalCredits": 0,
+    "reserved": "                                       "
+  },
+  "padding": 8
 }
-*/
-
-let newNachaString = nachaFile.to('ach')
-let nachaJSON = nachaFile.to('json')
-
 ```
 
 [Back to: Table of Contents](#table-of-contents)

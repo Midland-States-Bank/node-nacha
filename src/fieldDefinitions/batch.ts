@@ -23,7 +23,7 @@ export const batchHeader: FieldDefs<BatchHeader> = {
     position: [41, 50],
     trim: false,
   },
-  standardEntryClassCode: {
+  standardEntryClass: {
     position: [51, 53],
     allow: SEC_CODES as unknown as string[],
   },

@@ -33,6 +33,8 @@ export type BaseEntryOpts = {
 // ----------------------------------------------
 export default abstract class BaseEntryWrapper<S extends SEC> {
   protected _batch: BatchWrapper<S>;
+
+  /** SEC for this entry */
   public readonly type: S;
 
   public account: Account;
@@ -95,7 +97,7 @@ export default abstract class BaseEntryWrapper<S extends SEC> {
     this.traceNumber = opts.traceNumber ?? this.generateTraceNum();
   }
 
-  abstract raw(): EntryType<S>;
+  abstract toJSON(): EntryType<S>;
   abstract getAddendaCount(): number;
 
   // --------------

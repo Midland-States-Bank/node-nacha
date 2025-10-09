@@ -67,7 +67,7 @@ export default class Nacha {
         (batch) =>
           new BatchWrapper(
             this,
-            batch.header.standardEntryClassCode,
+            batch.header.standardEntryClass,
             batch
           ) as AnyBatch
       );
@@ -187,11 +187,11 @@ export default class Nacha {
 
   /** @returns A NACHA formatted file */
   toString(): string {
-    return formatNacha(this.raw());
+    return formatNacha(this.toJSON());
   }
 
   /** @returns a JSON representation of the file */
-  raw(): NachaData {
+  toJSON(): NachaData {
     return {
       header: {
         recordTypeCode: 1,
@@ -208,7 +208,7 @@ export default class Nacha {
         originName: this.origin.name,
         referenceCode: this.referenceCode,
       },
-      batches: this.batches.map((b) => b.raw()),
+      batches: this.batches.map((b) => b.toJSON()),
       footer: {
         recordTypeCode: 9,
         batchCount: this.batchCount,
@@ -224,10 +224,18 @@ export default class Nacha {
   }
 
   /** Factory: parses NACHA text and return an initialized Nacha file */
-  static fromString(raw: string): Nacha {
+  static fromNacha(raw: string): Nacha {
     let data = parseNacha(raw);
     return new Nacha(data);
   }
 
+  /**
+   * Accepts a NACHA file in the form of a string & returns an object
+   * representation of the file. Any issues preventing the file from being 
+   * parsed will cause the function to throw.
+   */
   static parse = parseNacha;
+
+  /** Takes a NACHA object and returns NACHA formatted file as a string */
+  static format = formatNacha;
 }

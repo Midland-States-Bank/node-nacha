@@ -21,10 +21,10 @@ describe("Nacha Wrapper", () => {
       .replace(/\r/g, "");
 
     test("Can parse file from string", () => {
-      const nacha = Nacha.fromString(nachaStringExample);
+      const nacha = Nacha.fromNacha(nachaStringExample);
 
       expect(nacha.batches.length).toBeGreaterThan(0);
-      expect(nacha.raw()).toBeDefined();
+      expect(nacha.toJSON()).toBeDefined();
 
       nacha.batches.forEach((batch) => {
         // Header
@@ -107,7 +107,7 @@ describe("Nacha Wrapper", () => {
       batches.forEach((batch) => {
         const { header: bh, footer: bf } = batch;
 
-        const nachaBatch = nacha.addBatch(bh.standardEntryClassCode, {
+        const nachaBatch = nacha.addBatch(bh.standardEntryClass, {
           origin: bh.originatingDFIIdentification,
           entryDescription: bh.companyEntryDescription,
           company: {
@@ -246,7 +246,7 @@ describe("Nacha Wrapper", () => {
     expect(nacha.batches.length).toEqual(nacha.batchCount);
 
     const ccdBatch = nacha.batches[0];
-    expect(ccdBatch.raw().entries.length).toBe(1);
-    expect(ccdBatch.raw().header.companyId).toBe("123456789");
+    expect(ccdBatch.toJSON().entries.length).toBe(1);
+    expect(ccdBatch.toJSON().header.companyId).toBe("123456789");
   });
 });

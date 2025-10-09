@@ -84,7 +84,7 @@ class CCDPPDEntryWrapper<S extends "CCD" | "PPD"> extends BaseEntryWrapper<S> {
     return this.addenda ? 1 : 0;
   }
 
-  raw(): EntryType<S> {
+  toJSON(): EntryType<S> {
     return rawSingle(
       this,
       this._batch.sec,
@@ -121,7 +121,7 @@ export class WEBEntryWrapper extends BaseEntryWrapper<"WEB"> {
     return this.addenda ? 1 : 0;
   }
 
-  raw(): EntryType<"WEB"> {
+  toJSON(): EntryType<"WEB"> {
     return rawSingle(
       this,
       "WEB",
@@ -148,7 +148,7 @@ export class TELEntryWrapper extends BaseEntryWrapper<"TEL"> {
     return 0;
   }
 
-  raw(): EntryType<"TEL"> {
+  toJSON(): EntryType<"TEL"> {
     return rawSingle(this, "TEL", {
       discretionaryData: this.discretionaryData,
     });
@@ -181,7 +181,7 @@ export class CTXEntryWrapper extends BaseEntryWrapper<"CTX"> {
     return this.getAddendaCount();
   }
 
-  raw(): EntryType<"CTX"> {
+  toJSON(): EntryType<"CTX"> {
     const base = this.getBaseEntry();
     return {
       entry: {
