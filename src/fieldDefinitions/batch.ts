@@ -1,10 +1,10 @@
-import type { FieldDefs } from "../types/FieldDef";
+import type { FieldDefs } from "../types/FieldDef.js";
 import {
   type BatchFooter,
   type BatchHeader,
-} from "../types/Nacha/Batch";
-import { SEC_CODES } from "../types/Nacha/SEC";
-import { dfi } from "../validators";
+} from "../types/Nacha/Batch.js";
+import { SEC_CODES } from "../types/Nacha/SEC.js";
+import { dfi } from "../validators.js";
 
 export const batchHeader: FieldDefs<BatchHeader> = {
   serviceClassCode: {

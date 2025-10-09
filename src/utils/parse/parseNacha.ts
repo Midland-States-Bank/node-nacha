@@ -5,10 +5,10 @@ import {
   FileHeader,
   NachaData,
   SEC,
-} from "../../types/Nacha";
-import { EntryType } from "../../types/Nacha/Entry";
-import { isBlank } from "../isBlank";
-import parseLine from "./parseLine";
+} from "../../types/Nacha/index.js";
+import { EntryType } from "../../types/Nacha/Entry.js";
+import { isBlank } from "../isBlank.js";
+import parseLine from "./parseLine.js";
 
 const RECORD_LEN = 94;
 const PADDING = "9".repeat(RECORD_LEN);

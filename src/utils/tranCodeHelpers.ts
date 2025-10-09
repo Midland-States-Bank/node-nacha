@@ -6,7 +6,7 @@ import {
   EntryTypeCode,
   Purpose,
   TransactionCode,
-} from "../types/EntryHelpers";
+} from "../types/EntryHelpers.js";
 
 export function getTranCodeDetails(tranCode: TransactionCode): {
   accountType: AccountType;

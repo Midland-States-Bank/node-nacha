@@ -1,7 +1,7 @@
-import { AccountType, TransactionCode } from "../EntryHelpers";
-import { Addenda } from "./Addenda";
-import { NachaRecordType } from "./NachaRecordType";
-import { SEC } from "./SEC";
+import { TransactionCode } from "../EntryHelpers.js";
+import { Addenda } from "./Addenda.js";
+import { NachaRecordType } from "./NachaRecordType.js";
+import { SEC } from "./SEC.js";
 
 export type EntryType<S extends SEC> = {
   entry: SecCodeMap[S];

@@ -1,7 +1,7 @@
-import { getEntryFieldDef, getNonEntryFieldDef } from "../../fieldDefinitions";
-import { RecordMap, SEC } from "../../types/Nacha";
-import { RecordTypeCode } from "../../types/Nacha/RecordTypes";
-import { isBlank } from "../isBlank";
+import { getEntryFieldDef, getNonEntryFieldDef } from "../../fieldDefinitions/index.js";
+import { RecordMap, SEC } from "../../types/Nacha/index.js";
+import { RecordTypeCode } from "../../types/Nacha/RecordTypes.js";
+import { isBlank } from "../isBlank.js";
 
 type NonEntries = Exclude<RecordTypeCode, 6>;
 type ValueOf<T> = T[keyof T];

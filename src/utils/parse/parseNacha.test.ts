@@ -1,6 +1,6 @@
 import fs from "fs";
-import parseNacha from "./parseNacha";
-import { SEC_CODES } from "../../types/Nacha/SEC";
+import parseNacha from "./parseNacha.js";
+import { SEC_CODES } from "../../types/Nacha/SEC.js";
 
 const nachaStringExample = fs
   .readFileSync(`./tests/NACHA_Examples/WEB.txt`)

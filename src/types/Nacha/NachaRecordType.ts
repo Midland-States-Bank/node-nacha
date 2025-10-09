@@ -1,4 +1,4 @@
-import { RecordTypeCode } from "./RecordTypes";
+import { RecordTypeCode } from "./RecordTypes.js";
 
 export type NachaRecordType<R extends RecordTypeCode> = Record<
   string,

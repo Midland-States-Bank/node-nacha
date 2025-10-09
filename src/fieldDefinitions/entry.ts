@@ -1,13 +1,13 @@
-import { TransactionCodes } from "../types/EntryHelpers";
-import type { FieldDef, FieldDefs } from "../types/FieldDef";
+import { TransactionCodes } from "../types/EntryHelpers.js";
+import type { FieldDef, FieldDefs } from "../types/FieldDef.js";
 import type {
   CCDType as CCDType,
   PPDType as PPDType,
   TELType as TELType,
   WEBType as WEBType,
   CTXType as CTXType,
-} from "../types/Nacha/Entry";
-import { aba } from "../validators";
+} from "../types/Nacha/Entry.js";
+import { aba } from "../validators.js";
 
 type FieldDefBase = Omit<FieldDef, "position">;
 

@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
-import Nacha from "./Nacha";
-import { SEC_CODES } from "../types/Nacha/SEC";
-import { AccountTypeMap } from "../types/EntryHelpers";
-import { getTranCodeDetails, parseYYMMDD } from "../utils";
+import Nacha from "./Nacha.js";
+import { SEC_CODES } from "../types/Nacha/SEC.js";
+import { AccountTypeMap } from "../types/EntryHelpers.js";
+import { getTranCodeDetails, parseYYMMDD } from "../utils/index.js";
 
 const EXAMPLES_DIR = path.resolve("./tests/NACHA_Examples");
 

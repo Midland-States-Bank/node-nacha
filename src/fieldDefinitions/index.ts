@@ -1,9 +1,9 @@
-import { SEC } from "../types/Nacha";
-import { RecordTypeCode, RecordTypes } from "../types/Nacha/RecordTypes";
-import { addenda } from "./addenda";
-import { batchFooter, batchHeader } from "./batch";
-import { CCD, CTX, PPD, TEL, WEB } from "./entry";
-import { fileHeader, fileFooter } from "./file";
+import { SEC } from "../types/Nacha/index.js";
+import { RecordTypeCode, RecordTypes } from "../types/Nacha/RecordTypes.js";
+import { addenda } from "./addenda.js";
+import { batchFooter, batchHeader } from "./batch.js";
+import { CCD, CTX, PPD, TEL, WEB } from "./entry.js";
+import { fileHeader, fileFooter } from "./file.js";
 
 const fieldDefinitions = {
   [RecordTypes.FILE_HEADER]: fileHeader,

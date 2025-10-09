@@ -1,4 +1,4 @@
-import { EntryCtxMap } from ".";
+import { EntryCtxMap } from "./index.js";
 import {
   Account,
   AccountCode,
@@ -8,10 +8,10 @@ import {
   EntryTypeCode,
   Purpose,
   TransactionCode,
-} from "../../types/EntryHelpers";
-import { Addenda, EntryType, SEC } from "../../types/Nacha";
-import { getTranCodeDetails } from "../../utils";
-import BatchWrapper from "../BatchWrapper";
+} from "../../types/EntryHelpers.js";
+import { Addenda, EntryType, SEC } from "../../types/Nacha/index.js";
+import { getTranCodeDetails } from "../../utils/index.js";
+import BatchWrapper from "../BatchWrapper.js";
 
 export type AddendaOpts = {
   typeCode: Addenda["addendaTypeCode"];

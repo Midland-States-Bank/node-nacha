@@ -1,9 +1,9 @@
-import type { BatchHeader, BatchFooter } from "./Batch";
-import type { EntryType, CCDType, PPDType, TELType, WEBType, CTXType, SecCodeMap } from "./Entry";
-import type { Addenda } from "./Addenda";
-import type { FileHeader, FileFooter } from "./File";
-import { SEC } from "./SEC";
-import { RecordTypes } from "./RecordTypes";
+import type { BatchHeader, BatchFooter } from "./Batch.js";
+import type { EntryType, CCDType, PPDType, TELType, WEBType, CTXType, SecCodeMap } from "./Entry.js";
+import type { Addenda } from "./Addenda.js";
+import type { FileHeader, FileFooter } from "./File.js";
+import { SEC } from "./SEC.js";
+import { RecordTypes } from "./RecordTypes.js";
 
 export interface NachaData {
   header: FileHeader;

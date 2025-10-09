@@ -1,8 +1,8 @@
-import { Batch, EntryType, SEC } from "../types/Nacha";
-import { OneOrMany } from "../types/OneOrMany";
-import { parseYYMMDD, sumArray, toYYMMDD } from "../utils";
-import { EntryOf, EntryCtxMap, makeEntry } from "./Entry";
-import Nacha from "./Nacha";
+import { Batch, EntryType, SEC } from "../types/Nacha/index.js";
+import { OneOrMany } from "../types/OneOrMany.js";
+import { parseYYMMDD, sumArray, toYYMMDD } from "../utils/index.js";
+import { EntryOf, EntryCtxMap, makeEntry } from "./Entry/index.js";
+import Nacha from "./Nacha.js";
 
 type Company = {
   id: string;

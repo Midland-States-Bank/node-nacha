@@ -1,4 +1,4 @@
-import { NachaRecordType } from "./NachaRecordType";
+import { NachaRecordType } from "./NachaRecordType.js";
 
 export interface Addenda extends NachaRecordType<7> {
   addendaTypeCode: "02" | "05" | "98" | "99";

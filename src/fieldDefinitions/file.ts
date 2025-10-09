@@ -1,6 +1,6 @@
-import type { FieldDefs } from "../types/FieldDef";
-import type { FileFooter, FileHeader } from "../types/Nacha/index";
-import { aba } from "../validators";
+import type { FieldDefs } from "../types/FieldDef.js";
+import type { FileFooter, FileHeader } from "../types/Nacha/index.js";
+import { aba } from "../validators.js";
 
 export const fileHeader: FieldDefs<FileHeader> = {
   priorityCode: {

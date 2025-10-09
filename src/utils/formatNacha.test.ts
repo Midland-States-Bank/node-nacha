@@ -1,8 +1,8 @@
 import { describe, test, expect } from "vitest";
 
 import fs from "fs";
-import formatNacha from "./formatNacha";
-import parseNacha from "./parse/parseNacha";
+import formatNacha from "./formatNacha.js";
+import parseNacha from "./parse/parseNacha.js";
 import path from "path";
 
 const EXAMPLES_DIR = path.resolve("./tests/NACHA_Examples");

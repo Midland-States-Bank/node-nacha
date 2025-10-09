@@ -1,5 +1,5 @@
 // Unused currently but will be in the future
-import type { Issue } from "./types/Issue";
+import type { Issue } from "./types/Issue.js";
 
 export const date = (val: string) => false;
 export const time = (val: string) => false;

@@ -1,4 +1,4 @@
-import { NachaRecordType } from "./NachaRecordType";
+import { NachaRecordType } from "./NachaRecordType.js";
 
 export interface FileHeader extends NachaRecordType<1> {
   priorityCode: number;

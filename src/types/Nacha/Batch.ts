@@ -1,5 +1,5 @@
-import { NachaRecordType } from "./NachaRecordType";
-import { SEC } from "./SEC";
+import { NachaRecordType } from "./NachaRecordType.js";
+import { SEC } from "./SEC.js";
 
 type serviceClassCode = 200 | 220 | 225;
 

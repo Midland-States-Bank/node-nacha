@@ -1,5 +1,5 @@
-import type { FieldDefs } from "../types/FieldDef";
-import type { Addenda } from "../types/Nacha/Addenda";
+import type { FieldDefs } from "../types/FieldDef.js";
+import type { Addenda } from "../types/Nacha/Addenda.js";
 
 export const addenda: FieldDefs<Addenda> = {
   addendaTypeCode: {

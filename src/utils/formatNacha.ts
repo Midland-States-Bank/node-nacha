@@ -1,5 +1,5 @@
-import fieldDefinitions from "../fieldDefinitions";
-import { NachaData, NachaTypes } from "../types/Nacha";
+import fieldDefinitions from "../fieldDefinitions/index.js";
+import { NachaData, NachaTypes } from "../types/Nacha/index.js";
 
 /** @param data JSON representation of a NACHA file */
 export default function formatNacha(data: NachaData): string {

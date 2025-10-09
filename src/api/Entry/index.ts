@@ -1,7 +1,7 @@
-import { Addenda, SEC } from "../../types/Nacha";
-import { EntryType } from "../../types/Nacha/Entry";
-import BatchWrapper from "../BatchWrapper";
-import BaseEntryWrapper, { AddendaOpts, BaseEntryOpts } from "./BaseEntry";
+import { Addenda, SEC } from "../../types/Nacha/index.js";
+import { EntryType } from "../../types/Nacha/Entry.js";
+import BatchWrapper from "../BatchWrapper.js";
+import BaseEntryWrapper, { AddendaOpts, BaseEntryOpts } from "./BaseEntry.js";
 
 // -----------------------
 // Constructor arg types
