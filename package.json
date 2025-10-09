@@ -1,7 +1,6 @@
 {
   "name": "@midlandsbank/node-nacha",
   "version": "1.1.0",
-  "type": "module",
   "description": "NACHA ACH EFT File Parser/Formatter for CCD+ / PPD+ / CTX+",
   "keywords": [
     "eft",
@@ -24,11 +23,11 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --sourcemap --clean",
     "dev": "tsup src/index.ts --format esm,cjs --dts --sourcemap --watch",
-    "test": "jest"
+    "test": "vitest"
   },
   "devDependencies": {
-    "jest": "^29.7.0",
     "tsup": "^8.5.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
   }
 }
