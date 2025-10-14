@@ -25,7 +25,7 @@ export const EntryTypeCodes = [2, 3, 4, 6, 7, 8, 9] as const;
 export type EntryTypeCode = (typeof EntryTypeCodes)[number];
 
 export type TransactionCode =
-  `${EntryTypeCode}${AccountCode}` extends `${infer N extends number}`
+  `${AccountCode}${EntryTypeCode}` extends `${infer N extends number}`
     ? N
     : never;
 

@@ -12,7 +12,7 @@ export interface BatchHeader extends NachaRecordType<5> {
   companyEntryDescription: string;
   companyEntryDescriptiveDate?: string;
   effectiveDate: string;
-  settlementDate: string;
+  settlementDate?: string;
   originatorStatusCode: number;
   originatingDFIIdentification: string;
   batchNumber: number;
