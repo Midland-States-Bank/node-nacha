@@ -33,7 +33,8 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --sourcemap --clean",
     "dev": "tsup src/index.ts --format esm,cjs --dts --sourcemap --watch",
-    "test": "vitest"
+    "test:watch": "vitest",
+    "test": "vitest run"
   },
   "devDependencies": {
     "tsup": "^8.5.0",
