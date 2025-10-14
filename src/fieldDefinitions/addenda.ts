@@ -20,7 +20,6 @@ export const addenda: FieldDefs<Addenda> = {
   },
   entryDetailSequenceNum: {
     position: [88, 94],
-    numeric: true,
     validator: {
       regex: /\d{7}/,
       message: "entryDetailSequenceNum must be 7 digits",
