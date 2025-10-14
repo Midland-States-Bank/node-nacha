@@ -43,6 +43,7 @@ export const batchHeader: FieldDefs<BatchHeader> = {
     optional: true,
   },
   originatorStatusCode: {
+    numeric: true,
     position: [79, 79],
   },
   originatingDFIIdentification: {
