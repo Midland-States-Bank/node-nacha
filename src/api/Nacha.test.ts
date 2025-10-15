@@ -46,9 +46,9 @@ describe("Nacha Wrapper", () => {
           // Note: if you using a var to check a type ensure it's const
           const { type } = entry;
 
-          expect(entry.account.number).toBeTypeOf("string");
-          expect(entry.account.type).toBeOneOf(Object.keys(AccountTypeMap));
-          expect(entry.account.routing).toBeTypeOf("string");
+          expect(entry.accountNumber).toBeTypeOf("string");
+          expect(entry.accountType).toBeOneOf(Object.keys(AccountTypeMap));
+          expect(entry.routingNumber).toBeTypeOf("string");
           expect(entry.amount).toBeGreaterThan(-1);
           expect(entry.amountSigned).toBeTypeOf("number");
           expect(entry.transactionCode).toBeTypeOf("number");
@@ -122,22 +122,15 @@ describe("Nacha Wrapper", () => {
 
         batch.entries.forEach(({ entry, addenda }) => {
           const type = entry.type;
-          const { purpose, direction, accountType } = getTranCodeDetails(
-            entry.transactionCode
-          );
 
           const base = {
-            direction,
-            account: {
-              type: accountType,
-              number: entry.accountNumber,
-              routing: entry.routingNumber,
-            },
+            accountNumber: entry.accountNumber,
+            routingNumber: entry.routingNumber,
+            transactionCode: entry.transactionCode,
             amount: entry.amount / 100, // Convert to dollars
             name: entry.name,
             idNumber: entry.idNumber,
             traceNumber: entry.traceNumber,
-            purpose,
           };
 
           switch (type) {
@@ -232,11 +225,9 @@ describe("Nacha Wrapper", () => {
       .addEntry({
         direction: "credit",
         amount: 100.0,
-        account: {
-          type: "Checking",
-          number: "1234567890",
-          routing: "123456789",
-        },
+        accountNumber: "1234567890",
+        routingNumber: "123456789",
+        accountType: "Checking",
         name: "John Doe",
       })
       .done();

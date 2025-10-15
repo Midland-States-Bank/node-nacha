@@ -159,7 +159,7 @@ export default class Nacha {
    */
   get entryHash() {
     let entryDFIs = this.batches
-      .flatMap((b) => b.entries.map((e) => e.account.routing))
+      .flatMap((b) => b.entries.map((e) => e.routingNumber))
       .map((routing) => Number(routing.slice(0, 8)));
 
     return sumArray(entryDFIs) % (100_000_000 * 10);
