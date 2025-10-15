@@ -240,4 +240,43 @@ describe("Nacha Wrapper", () => {
     expect(ccdBatch.toJSON().entries.length).toBe(1);
     expect(ccdBatch.toJSON().header.companyId).toBe("123456789");
   });
+
+  test("Can add entries during batch creation", () => {
+    const nacha = new Nacha({
+      origin: {
+        name: "Example ODFI",
+        routing: "123456789",
+      },
+      destination: {
+        name: "Example ODFI",
+        routing: "987654321",
+      },
+    }).ccd(
+      {
+        company: {
+          name: "Company ABC",
+          id: "123456789",
+        },
+        entryDescription: "Example Entry Desc.",
+      },
+      [
+        {
+          direction: "credit",
+          amount: 100.0,
+          accountNumber: "1234567890",
+          routingNumber: "123456789",
+          accountType: "Checking",
+          name: "John Doe",
+        },
+      ]
+    );
+
+    expect(nacha.toString().length).toBeGreaterThan(0);
+    expect(nacha.batches.length).toBe(1);
+    expect(nacha.batches.length).toEqual(nacha.batchCount);
+
+    const ccdBatch = nacha.batches[0];
+    expect(ccdBatch.toJSON().entries.length).toBe(1);
+    expect(ccdBatch.toJSON().header.companyId).toBe("123456789");
+  });
 });
