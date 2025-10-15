@@ -117,7 +117,7 @@ export default class BatchWrapper<S extends SEC> {
 
   get entryHash() {
     let entryDFIs = this.entries
-      .map((e) => e.account.routing)
+      .map((e) => e.routingNumber)
       .map((routing) => Number(routing.slice(0, 8)));
 
     return sumArray(entryDFIs) % (1_000_000_000 * 10);

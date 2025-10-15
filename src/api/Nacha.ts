@@ -4,6 +4,8 @@ import BatchWrapper, { AnyBatch, BatchCtx } from "./BatchWrapper.js";
 import parseNacha from "../utils/parse/parseNacha.js";
 import { SEC_CODES } from "../types/Nacha/SEC.js";
 import formatNacha from "../utils/formatNacha.js";
+import { OneOrMany } from "../types/OneOrMany.js";
+import { EntryCtxMap } from "./Entry/index.js";
 
 interface DFI {
   /** Name of the Financial Institution */
@@ -21,13 +23,17 @@ interface NachaCtx {
   referenceCode?: string;
 }
 
+// type BatchFactory<S extends SEC> = (sec: S, opts: BatchCtx, entries?: OneOrMany<EntryCtxMap[S]>) => this |
 // Map out possible SEC code to helper method on NACHA
-type SecMethodMap = {
-  [K in SEC as Lowercase<K>]: (opts: BatchCtx) => BatchWrapper<K>;
+type SecMethodMap<Self> = {
+  [K in SEC as Lowercase<K>]: {
+    (opts: BatchCtx): BatchWrapper<K>;
+    (opts: BatchCtx, entries: OneOrMany<EntryCtxMap[K]>): Self;
+  };
 };
 
 // Add auto-generated functions to Nacha class type
-export default interface Nacha extends SecMethodMap {}
+export default interface Nacha extends SecMethodMap<Nacha> {}
 export default class Nacha {
   /** The lower the number, the higher processing priority. */
   public priorityCode: number = 1;
@@ -108,23 +114,49 @@ export default class Nacha {
   }
 
   // Batch Builder methods
-  addBatch<S extends SEC>(sec: S, opts: BatchCtx): BatchWrapper<S> {
+  addBatch<S extends SEC>(sec: S, opts: BatchCtx): BatchWrapper<S>;
+  addBatch<S extends SEC>(
+    sec: S,
+    opts: BatchCtx,
+    entries: OneOrMany<EntryCtxMap[S]>
+  ): this;
+  addBatch<S extends SEC>(
+    sec: S,
+    opts: BatchCtx,
+    entries?: OneOrMany<EntryCtxMap[S]>
+  ): BatchWrapper<S> | this {
     const batch = new BatchWrapper(this, sec, opts);
     this.batches.push(batch as AnyBatch);
+
+    if (entries) {
+      batch.addEntry(entries);
+      return this;
+    }
+
     return batch;
   }
 
   // Add helper methods for each SEC code
   static {
-    SEC_CODES.forEach((sec) => {
-      Object.defineProperty(this.prototype, sec.toLowerCase(), {
-        value(this: Nacha, opts: BatchCtx) {
-          return this.addBatch(sec, opts);
+    const define = <K extends SEC>(ctor: typeof Nacha, sec: K) => {
+      const key = sec.toLowerCase() as Lowercase<K>;
+      Object.defineProperty(ctor.prototype, key, {
+        value(
+          this: Nacha,
+          opts: BatchCtx,
+          entries?: OneOrMany<EntryCtxMap[K]>
+        ) {
+          // entries provided → return `this`, else return the created BatchWrapper<K>
+          return entries !== undefined
+            ? this.addBatch(sec, opts, entries)
+            : this.addBatch(sec, opts);
         },
         configurable: true,
         writable: true,
       });
-    });
+    };
+
+    SEC_CODES.forEach((sec) => define(this, sec));
   }
 
   /** The total number of batch header records in the file.  */
@@ -159,7 +191,7 @@ export default class Nacha {
    */
   get entryHash() {
     let entryDFIs = this.batches
-      .flatMap((b) => b.entries.map((e) => e.account.routing))
+      .flatMap((b) => b.entries.map((e) => e.routingNumber))
       .map((routing) => Number(routing.slice(0, 8)));
 
     return sumArray(entryDFIs) % (100_000_000 * 10);
@@ -231,7 +263,7 @@ export default class Nacha {
 
   /**
    * Accepts a NACHA file in the form of a string & returns an object
-   * representation of the file. Any issues preventing the file from being 
+   * representation of the file. Any issues preventing the file from being
    * parsed will cause the function to throw.
    */
   static parse = parseNacha;

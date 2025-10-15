@@ -34,12 +34,5 @@ export const TransactionCodes = AccountTypeCodes.flatMap((a) =>
 ) as TransactionCode[];
 
 
-/** Account & routing number at destination bank */
-export interface Account {
-  routing: string;
-  number: string;
-  type: AccountType;
-}
-
 export type Direction = "credit" | "debit";
 export type Purpose = "live" | "prenote" | "remittance";

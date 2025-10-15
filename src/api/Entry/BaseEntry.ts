@@ -1,6 +1,5 @@
 import { EntryCtxMap } from "./index.js";
 import {
-  Account,
   AccountCode,
   AccountType,
   AccountTypeMap,
@@ -18,15 +17,31 @@ export type AddendaOpts = {
   paymentRelatedInfo: Addenda["paymentRelatedInfo"];
 };
 
-export type BaseEntryOpts = {
-  direction: Direction;
-  account: Account;
+type EntryBaseCommon = {
   amount: number; // dollars and cents (input); internally stored as CENTS
   name: string;
+  accountNumber: string;
+  routingNumber: string;
   idNumber?: string;
   traceNumber?: string;
-  purpose?: Purpose;
 };
+
+// These are all field deriver from/use to derive the NACHA tran code
+type TranCodeFields = {
+  direction: Direction;
+  accountType: AccountType;
+  purpose?: Purpose; // Default to Live
+  transactionCode?: never; // can't be present in this branch
+};
+
+type RawTranCode = {
+  transactionCode: TransactionCode;
+  direction?: never; // can't be present in this branch
+  accountType?: never;
+  purpose?: never;
+};
+
+export type BaseEntryOpts = EntryBaseCommon & (TranCodeFields | RawTranCode);
 
 // ----------------------------------------------
 // Base class with common behavior & accessors
@@ -37,10 +52,13 @@ export default abstract class BaseEntryWrapper<S extends SEC> {
   /** SEC for this entry */
   public readonly type: S;
 
-  public account: Account;
+  /** Two digit code identifying the account type & purpose at the
+   * receiving financial institution */
+  public transactionCode: TransactionCode;
 
-  /** Credit/Debit */
-  public direction: Direction;
+  public accountNumber: string;
+
+  public routingNumber: string;
 
   /** amount of the transaction in dollars */
   public amount: number;
@@ -48,7 +66,7 @@ export default abstract class BaseEntryWrapper<S extends SEC> {
   /** determines the purpose of the entry. Non-live transactions should
    * have an amount of 0.
    */
-  public purpose: Purpose;
+  // public purpose: Purpose;
 
   /** Receiver's identification number. This number may
    * be printed on the receiver's bank statement by the
@@ -67,31 +85,34 @@ export default abstract class BaseEntryWrapper<S extends SEC> {
 
     // Construct from a raw EntryType (already in cents)
     if ("entry" in opts) {
-      const { accountType, direction, purpose } = getTranCodeDetails(
-        opts.entry.transactionCode
-      );
-
       this.type = opts.entry.type as S;
-      this.account = {
-        type: accountType,
-        number: opts.entry.accountNumber,
-        routing: opts.entry.routingNumber,
-      };
+      this.transactionCode = opts.entry.transactionCode;
+      this.accountNumber = opts.entry.accountNumber;
+      this.routingNumber = opts.entry.routingNumber;
       this.amount = opts.entry.amount; // already cents
-      this.direction = direction;
-      this.purpose = purpose;
       this.idNumber = opts.entry.idNumber;
       this.name = opts.entry.name;
       this.traceNumber = opts.entry.traceNumber;
       return;
     }
 
-    // Otherwise, build from friendly opts (amount provided in dollars)
+    let tranCode: TransactionCode;
+    if (opts.accountType && opts.direction) {
+      tranCode = this.getTranCode(
+        opts.accountType,
+        opts.direction,
+        opts.purpose ?? "live"
+      );
+    } else {
+      tranCode = opts.transactionCode!;
+    }
+
+    this.transactionCode = tranCode;
     this.type = batch.sec;
-    this.account = opts.account;
-    this.direction = opts.direction;
+    this.accountNumber = opts.accountNumber;
+    this.routingNumber = opts.routingNumber;
+
     this.amount = opts.amount;
-    this.purpose = opts.purpose ?? "live";
     this.idNumber = opts.idNumber;
     this.name = opts.name;
     this.traceNumber = opts.traceNumber ?? this.generateTraceNum();
@@ -107,8 +128,8 @@ export default abstract class BaseEntryWrapper<S extends SEC> {
     return {
       recordTypeCode: 6 as const,
       transactionCode: this.transactionCode,
-      routingNumber: this.account.routing,
-      accountNumber: this.account.number,
+      routingNumber: this.routingNumber,
+      accountNumber: this.accountNumber,
       amount: Math.round(this.amount * 100),
       name: this.name,
       idNumber: this.idNumber,
@@ -177,10 +198,21 @@ export default abstract class BaseEntryWrapper<S extends SEC> {
   // -----------------
   // Common accessors
   // -----------------
-  /** Two digit code identifying the account type & purpose at the
-   * receiving financial institution */
-  get transactionCode(): TransactionCode {
-    return this.getTranCode(this.account.type, this.direction, this.purpose);
+
+  /** Credit/Debit */
+  get direction(): Direction {
+    let { direction } = getTranCodeDetails(this.transactionCode);
+    return direction;
+  }
+
+  get purpose(): Purpose {
+    let { purpose } = getTranCodeDetails(this.transactionCode);
+    return purpose;
+  }
+
+  get accountType(): AccountType {
+    let { accountType } = getTranCodeDetails(this.transactionCode);
+    return accountType;
   }
 
   /** Signed amount in dollars. Credit are positives & Debits are negative. */
