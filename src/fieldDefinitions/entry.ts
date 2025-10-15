@@ -1,4 +1,4 @@
-import { TransactionCodes } from "../types/EntryHelpers.js";
+import { TRANSACTION_CODES } from "../types/EntryHelpers.js";
 import type { FieldDef, FieldDefs } from "../types/FieldDef.js";
 import type {
   CCDType as CCDType,
@@ -15,7 +15,7 @@ const transactionCode: FieldDef = {
   // length: 2,
   numeric: true,
   position: [2, 3],
-  allow: TransactionCodes,
+  allow: TRANSACTION_CODES,
 };
 const routingNumber: FieldDef = {
   // length: 9,

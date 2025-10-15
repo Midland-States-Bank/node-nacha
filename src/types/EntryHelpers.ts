@@ -29,7 +29,7 @@ export type TransactionCode =
     ? N
     : never;
 
-export const TransactionCodes = AccountTypeCodes.flatMap((a) =>
+export const TRANSACTION_CODES = AccountTypeCodes.flatMap((a) =>
   EntryTypeCodes.map((e) => a * 10 + e)
 ) as TransactionCode[];
 
