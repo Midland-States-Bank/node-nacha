@@ -2,6 +2,13 @@
   "name": "@midlandsbank/node-nacha",
   "version": "2.1.1",
   "type": "module",
+  "author": {
+    "name": "Midland States Bank"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Midland-States-Bank/node-nacha.git"
+  },
   "description": "NACHA ACH EFT File Parser/Formatter for CCD+ / PPD+ / CTX+",
   "keywords": [
     "eft",
